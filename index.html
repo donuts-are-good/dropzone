@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Image Uploader</title>
+    <style>
+      .drop-area {
+        height: 100%;
+        border: 2px dashed #ccc;
+        text-align: center;
+        line-height: 200px;
+        font-size: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="drop-area">
+      Drag and drop an image here
+      <input type="file" id="fileInput" style="display: none;">
+    </div>
+    <textarea id="markdownLink" style="display: none;"></textarea>
+
+    <script>
+      async function handleImageFile(file) {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+
+        reader.onload = function() {
+          const dataURL = reader.result;
+          const markdownLink = `![${file.name}](${dataURL})`;
+
+          const markdownLinkTextarea = document.querySelector('#markdownLink');
+          markdownLinkTextarea.innerText = markdownLink;
+
+          const dialog = document.createElement('dialog');
+          dialog.innerHTML = `
+            <p>Done!</p>
+            <button id="copyButton">OK</button>
+          `;
+          document.body.appendChild(dialog);
+          dialog.showModal();
+
+          const copyButton = document.querySelector('#copyButton');
+          copyButton.addEventListener('click', () => {
+            setTimeout(() => {
+              const textarea = document.createElement('textarea');
+              textarea.value = markdownLink;
+              textarea.style.display = 'block';
+              document.body.appendChild(textarea);
+              textarea.select();
+              document.execCommand('copy');
+              textarea.remove();
+            }, 0);
+            dialog.close();
+          });
+        };
+      }
+      const dropArea = document.querySelector('.drop-area');
+      const fileInput = document.querySelector('#fileInput');
+
+      dropArea.addEventListener('dragover', (event) => {
+        event.preventDefault();
+        dropArea.style.backgroundColor = '#eee';
+      });
+
+      dropArea.addEventListener('dragleave', (event) => {
+        event.preventDefault();
+        dropArea.style.backgroundColor = '';
+      });
+
+      dropArea.addEventListener('drop', (event) => {
+        event.preventDefault();
+        dropArea.style.backgroundColor = '';
+
+        const file = event.dataTransfer.files[0];
+        handleImageFile(file);
+      });
+
+      dropArea.addEventListener('click', () => {
+        fileInput.click();
+      });
+
+      fileInput.addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        handleImageFile(file);
+      });
+    </script>
+  </body>
+</html>
