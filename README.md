@@ -1,10 +1,8 @@
 # dropzone
-Drag and crop image ->pasteable base64 data URI
+Drag and drop image -> pasteable base64 data URI
 
 ### What?
-
-Sometimes you want to post a picture, but imgur.com has blocked all of your vpn endpoints, what are you gonna do? Well, open this html file and drag an image onto it and it will convert that image into text that can be transformed back into a picture when the browser renders it. 
-
+Dropzone is a simple html page that you can use to convert images to easily pasteable text. When you paste the text in comment boxes and websites it automagically converts to an image.
 
 ### I still don't get it
 
